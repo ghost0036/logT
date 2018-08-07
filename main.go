@@ -7,12 +7,24 @@ import (
 	"time"
 )
 
-var serverName = flag.String("-server", "0.0.0.0:8080", "server Address")
+var serverName = flag.String("a", "0.0.0.0:8080", "server Address")
+var isServer = flag.Bool("server",true,"运行模式，true是服务器")
 var wg sync.WaitGroup
 
 func main() {
-	if serverName != nil {
-		tcpClient := tcp.TcpClient{ServerAdd: "127.0.0.1:8080"}
+	flag.Parse()
+	if *isServer  {
+		go func() {
+			wg.Add(1)
+			tcpServer := tcp.TcpServer{}
+			tcpServer.Open()
+			tcpServer.Start()
+		}()
+		//等待一秒防止还没有执行到协程序
+		time.Sleep(time.Second*1)
+		wg.Wait()
+	} else {
+		tcpClient := tcp.TcpClient{ServerAdd: *serverName,}
 		tcpClient.Open()
 		tcpClient.Connection()
 
@@ -25,14 +37,5 @@ func main() {
 				continue
 			}
 		}
-	} else {
-		go func() {
-			wg.Add(1)
-			tcpServer := tcp.TcpServer{}
-			tcpServer.Open()
-			tcpServer.Start()
-		}()
-
-		wg.Wait()
 	}
 }
