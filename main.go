@@ -11,6 +11,7 @@ var serverName = flag.String("a", ":8080", "server Address")
 var isServer = flag.Bool("server",true,"运行模式，true是服务器")
 var wg sync.WaitGroup
 
+
 func main() {
 	flag.Parse()
 	if *isServer  {
