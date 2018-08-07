@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	server = "0.0.0.0:8080"
+	server = ":8080"
 )
 
 func (tcpServer *TcpServer) Open() {
